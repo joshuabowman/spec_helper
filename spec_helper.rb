@@ -18,6 +18,8 @@ RSpec.configure do |config|
   config.order = "random"
 
   config.before do
+    [Post, Comment].each { |model| model.paginates_per(Kaminari.config.default_per_page) }
+
     example.metadata[:truncate] = true if example.metadata[:js]
 
     DatabaseCleaner.strategy = example.metadata[:truncate] ? :truncation : :transaction
