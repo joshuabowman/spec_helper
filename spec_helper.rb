@@ -26,6 +26,10 @@ RSpec.configure do |config|
     c.ignore_hosts "127.0.0.1", "localhost"
   end
 
+  if ENV["JENKINS_CI"]
+    config.filter_run_excluding :upload
+  end
+
   config.before(:suite) do
     Redis.current.select(1)
   end
