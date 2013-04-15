@@ -6,6 +6,7 @@ require "capybara/rspec"
 require "capybara/poltergeist"
 
 Capybara.javascript_driver = :poltergeist
+WebMock.disable_net_connect!(allow_localhost: true)
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
@@ -18,6 +19,12 @@ RSpec.configure do |config|
   config.order = "random"
 
   config.include ActionView::TestCase::Behavior, example_group: { file_path: %r{spec/presenters} }
+
+  VCR.configure do |c|
+    c.cassette_library_dir = "spec/cassettes"
+    c.hook_into :webmock
+    c.ignore_hosts "127.0.0.1", "localhost"
+  end
 
   config.before(:suite) do
     Redis.current.select(1)
