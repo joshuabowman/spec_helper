@@ -17,6 +17,8 @@ RSpec.configure do |config|
 
   config.order = "random"
 
+  config.include ActionView::TestCase::Behavior, example_group: { file_path: %r{spec/presenters} }
+
   config.before(:suite) do
     Redis.current.select(1)
   end
