@@ -17,8 +17,13 @@ RSpec.configure do |config|
 
   config.order = "random"
 
+  config.before(:suite) do
+    Redis.current.select(1)
+  end
+
   config.before do
     [Post, Comment].each { |model| model.paginates_per(Kaminari.config.default_per_page) }
+    Redis.current.flushdb
 
     example.metadata[:truncate] = true if example.metadata[:js]
 
