@@ -41,6 +41,7 @@ RSpec.configure do |config|
 
   config.after do
     DatabaseCleaner.clean
+    Timecop.return
 
     if example.metadata[:solr]
       Sunspot.config.pagination.default_per_page = DEFAULT_PER_PAGE
