@@ -29,9 +29,21 @@ RSpec.configure do |config|
 
     DatabaseCleaner.strategy = example.metadata[:truncate] ? :truncation : :transaction
     DatabaseCleaner.start
+
+    if example.metadata[:solr]
+      Sunspot.remove_all!
+    else
+      Sunspot.session = Sunspot::Rails::StubSessionProxy.new(Sunspot.session)
+    end
   end
 
   config.after do
     DatabaseCleaner.clean
+
+    if example.metadata[:solr]
+      Sunspot.config.pagination.default_per_page = DEFAULT_PER_PAGE
+    else
+      Sunspot.session = Sunspot.session.original_session
+    end
   end
 end
