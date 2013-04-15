@@ -42,6 +42,7 @@ RSpec.configure do |config|
   config.after do
     DatabaseCleaner.clean
     Timecop.return
+    FileUtils.rm_rf(Rails.root.join("public/uploads/test"))
 
     if example.metadata[:solr]
       Sunspot.config.pagination.default_per_page = DEFAULT_PER_PAGE
